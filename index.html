@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>瘋農規劃器 V9.0</title>
+    <title>瘋農規劃器 V10</title>
     <style>
     
     /* ============================================================ */
@@ -12,13 +12,13 @@
 
         /* 定義網頁全域主題配色（CSS 變數） */
         :root {
-            --bg-main     : #f0f4f8; /* 主網頁背景色 */
-            --bg-container: #ffffff; /* 主容器背景色 */
-            --text-main   : #2d3748; /* 主要文字顏色 */
-            --border-color: #cbd5e1; /* 通用邊框顏色 */
-            --grid-line   : #e2e8f0; /* 主網格線顏色 */
-            --navy-dark   : #334155; /* 強調色 */
-            --accent-blue : #475569; /* 強調色 */
+            --bg-main        : #f0f4f8; /* 主網頁背景色 */
+            --bg-container   : #ffffff; /* 主容器背景色 */
+            --text-main      : #2d3748; /* 主要文字顏色 */
+            --border-color   : #cbd5e1; /* 通用邊框顏色 */
+            --grid-line      : #e2e8f0; /* 主網格線顏色 */
+            --navy-dark      : #334155; /* 強調色 */
+            --accent-blue    : #475569; /* 強調色 */
 
             --color-type-pu  : #000000; /* 普 */
             --color-type-yi  : #00b050; /* 異 */
@@ -227,7 +227,7 @@
         
         /* 依種子稀有度著色 */
         .c-q-btn-至臻 { background-color: #f0f4ff; color: #2563eb; border-color: #bfdbfe; }
-        .c-q-btn-黃金 { background-color: #fffbeb; color: #ed7d31; border-color: #fde68a; }
+        .c-q-btn-橙色 { background-color: #fffbeb; color: #ed7d31; border-color: #fde68a; }
         .c-q-btn-紫色 { background-color: #faf5ff; color: #a855f7; border-color: #e9d5ff; }
         .c-q-btn-藍色 { background-color: #ecfeff; color: #00b0f0; border-color: #c5f6fa; }
         .c-q-btn-綠色 { background-color: #f0fdf4; color: #16a34a; border-color: #bbf7d0; }
@@ -304,8 +304,6 @@
         /* 呼吸燈特效 */
         @keyframes pulse-move { 0% { opacity: 1.0; } 50% { opacity: 0.6; } 100% { opacity: 1.0; } }
         @keyframes pulse-copy { 0% { opacity: 1.0; } 50% { opacity: 0.6; } 100% { opacity: 1.0; } }
-
-
 
         /* ============================================================ */
         /* 6. 核心佈局架構（三欄式主要版面）                              */
@@ -561,6 +559,18 @@
             background   : #e2e8f0;
             border-radius: 4px;
             padding      : 2px 0;
+            transition   : all 0.2s;
+        }
+
+        /* 交換模式開啟時，標題顯示為可點擊游標 */
+        body.is-move-mode .c-zone-title       { cursor: pointer;}
+        body.is-move-mode .c-zone-title:hover { background: #cbd5e1; }
+
+        /* 批次交換待選中起點田地的發光樣式 */
+        .c-zone-title.c-zone-pending-source {
+            outline         : 0.5px dashed #d97706 ;
+            background-color: #fef3c7 ;
+            color           : #b45309 ;
         }
 
         /* 核心 10x10 網格：含最外圍座標軸（8x8田地 + 四週座標） */
@@ -654,18 +664,20 @@
         }
 
         /* 作物文字及背景顏色定義 */
-        .t-至臻 { color: #2563eb !important; }
-        .t-黃金 { color: #ed7d31 !important; }
-        .t-紫色 { color: #a855f7 !important; }
-        .t-藍色 { color: #00b0f0 !important; }
-        .t-綠色 { color: #16a34a !important; }
-        .t-灰色 { color: #7f7f7f !important; }
+        .t-至臻 { color: #2563eb; }
+        .t-橙色 { color: #ed7d31; }
+        .t-紫色 { color: #a855f7; }
+        .t-藍色 { color: #00b0f0; }
+        .t-綠色 { color: #16a34a; }
+        .t-灰色 { color: #7f7f7f; }
+        .t-錯誤 { color: #dc2626; }
 
-        .bg-cat-黃金 { background-color: #fffbeb; color: #ed7d31; }
-        .bg-cat-紫色 { background-color: #faf5ff; color: #a855f7; }
-        .bg-cat-藍色 { background-color: #ecfeff; color: #00b0f0; }
-        .bg-cat-綠色 { background-color: #f0fdf4; color: #16a34a; }
-        .bg-cat-灰色 { background-color: #f8fafc; color: #7f7f7f; }
+        .bg-cat-橙色 { background-color: #fffbeb; }
+        .bg-cat-紫色 { background-color: #faf5ff; }
+        .bg-cat-藍色 { background-color: #ecfeff; }
+        .bg-cat-綠色 { background-color: #f0fdf4; }
+        .bg-cat-灰色 { background-color: #f8fafc; }
+        .bg-cat-錯誤 { background-color: #ffe4e6; }
 
         /* 至臻系列作物專屬獨立半透明底色 */
         .bg-crop-大王 { background-color: rgba(254, 240, 138, 0.60); } 
@@ -729,12 +741,138 @@
         /* 統計表格：最上方「全部田間總計」列的醒目藍色基礎樣式 */
         .c-total-type-row { background: #eff6ff !important; font-weight: bold; color: #1e40af; }
 
+        /* 統計表格：錯誤系列標題列 (深紅底白字，提升警示度) */
+        .c-cat-row-error {
+            background  : #f87171 !important;
+            color       : #ffffff !important;
+            font-weight : bold !important;
+            text-align  : left !important;
+            padding-left: 6px !important;
+        }
+
+        /* 統計表格：錯誤系列小計列 */
+        .c-cat-sum-row-error {
+            background : #fef2f2 !important;
+            font-weight: bold !important;
+            color      : #dc2626 !important;
+        }
+
+        /* ============================================================ */
+        /* 
+        
+        9. 自訂清除快選單 modal 彈出視窗                              */
+        /* ============================================================ */
+        .c-modal-overlay {
+            position       : fixed;
+            top            : 0; left: 0; right: 0; bottom: 0;
+            background     : rgba(0, 0, 0, 0.4);
+            display        : flex;
+            justify-content: center;
+            align-items    : center;
+            z-index        : 3000;
+            opacity        : 0;
+            visibility     : hidden;
+            transition     : all 0.2s ease;
+        }
+        .c-modal-overlay.c-modal-open {
+            opacity   : 1;
+            visibility: visible;
+        }
+        .c-modal-box {
+            background    : #ffffff;
+            width         : 320px;
+            border-radius : 12px;
+            padding       : 20px;
+            box-shadow    : 0 10px 25px rgba(0, 0, 0, 0.15);
+            display       : flex;
+            flex-direction: column;
+            gap           : 15px;
+        }
+        .c-modal-title {
+            font-size     : 16px;
+            font-weight   : bold;
+            color         : #1e3a8a;
+            text-align    : center;
+            border-bottom : 1px solid #e2e8f0;
+            padding-bottom: 10px;
+        }
+        .c-modal-options {
+            display       : flex;
+            flex-direction: column;
+            gap           : 10px;
+        }
+        .c-modal-option-label {
+            display      : flex;
+            align-items  : center;
+            gap          : 8px;
+            padding      : 8px 12px;
+            border       : 1px solid #cbd5e1;
+            border-radius: 8px;
+            cursor       : pointer;
+            font-size    : 14px;
+            transition   : all 0.15s;
+        }
+        .c-modal-option-label:hover { background-color: #f1f5f9; }
+        .c-modal-option-label input[type="radio"]:checked + span {
+            font-weight: bold;
+            color      : #ef4444;
+        }
+        .c-modal-actions {
+            display        : flex;
+            justify-content: flex-end;
+            gap            : 10px;
+            margin-top     : 5px;
+        }
+        .c-modal-btn {
+            padding      : 6px 16px;
+            border-radius: 6px;
+            font-size    : 13px;
+            cursor       : pointer;
+            border       : none;
+            transition   : all 0.15s;
+        }
+        .c-modal-btn-cancel {
+            background-color: #e2e8f0;
+            color           : #475569;
+        }
+        .c-modal-btn-cancel:hover { background-color: #cbd5e1; }
+        .c-modal-btn-confirm {
+            background-color: #ef4444;
+            color           : white;
+        }
+        .c-modal-btn-confirm:hover { background-color: #dc2626; }
+
     </style>
 </head>
 
 <body>
-    <h1>蛋仔派對瘋狂農場規劃器 V9.0</h1>
+    <h1>蛋仔派對瘋狂農場規劃器 V10 (by 疾熾烽)</h1>
     
+    <!-- 自訂清除選項 Modal 快選單 -->
+    <div class="c-modal-overlay" id="js-clearModal">
+        <div class="c-modal-box">
+            <div class="c-modal-title">🧹 請選擇要清除的項目</div>
+            <div class="c-modal-options">
+                <label class="c-modal-option-label">
+                    <input type="radio" name="clearOption" value="bag">
+                    <span>清除背包庫存</span>
+                </label>
+                <label class="c-modal-option-label">
+                    <input type="radio" name="clearOption" value="map">
+                    <span>清除田間作物</span>
+                </label>
+                <label class="c-modal-option-label">
+                    <input type="radio" name="clearOption" value="all" checked>
+                    <span>全部清除 (背包 + 作物)</span>
+                </label>
+            </div>
+            <div class="c-modal-actions">
+                <button class="c-modal-btn c-modal-btn-cancel" id="js-clearModalCancel"  >取消</button>
+                <button class="c-modal-btn c-modal-btn-confirm" id="js-clearModalConfirm">確定</button>
+            </div>
+        </div>
+    </div>
+
     <div class="c-header-container" id="js-headerTopContainer">
         <div class="c-controls">
             <div class="c-control-row">
@@ -883,9 +1021,9 @@
                 { name: '蘆薈　　', short: '蘆薈', weight: 10.2, price: "27.5 m" }, { name: '月蟾蜍　', short: '月蟾', weight: 34.0, price: "25.0 m" }, 
                 { name: '月兔　　', short: '月兔', weight: 23.8, price: "13.5 m" }, { name: '月影梅　', short: '梅樹', weight:  3.4, price: " 6.0 m" }, 
                 { name: '星空玫瑰', short: '星玫', weight: 10.2, price: "11.2 m" }, { name: '馬蹄蓮　', short: '蹄蓮', weight: 20.4, price: " 5.0 m" },
-                { name: '鈴蘭幽幽', short: '幽幽', weight: 23.8, price: "15.0 m" }, { name: '舞柿黛拉', short: '舞拉', weight: 45.2, price: "28.0 m" }
+                { name: '鈴蘭幽幽', short: '幽幽', weight: 23.8, price: "15.0 m" }, { name: '舞柿黛拉', short: '舞拉', weight: 42.5, price: "28.0 m" }
             ],
-            '黃金': [
+            '橙色': [
                 { name: '草莓　　', short: '草莓', weight:  9.0, price: "1.25 m" }, { name: '奇異果　', short: '奇異', weight: 14.5, price: " 600 k" },
                 { name: '榴槤　　', short: '榴槤', weight: 63.5, price: "1.75 m" }, { name: '荔枝　　', short: '荔枝', weight: 24.5, price: " 2.0 m" }, 
                 { name: '月核樹　', short: '核樹', weight: 17.2, price: " 2.0 m" }, { name: '液光藤　', short: '光藤', weight: 20.5, price: " 3.1 m" },
@@ -945,7 +1083,8 @@
         let moveSourceCell = null;
         let copyModeState = 'off';
         let copySourceCell = null;
-        const STORAGE_KEY = 'crazy-farm_V9.0_save';
+        let zoneMoveSource = null;
+        const STORAGE_KEY = 'crazy-farm_V10_save';
 
         // ============================================================
         // 【區塊三】網頁介面動態初始化與基本事件綁定
@@ -983,6 +1122,12 @@
                 }
                 gridHtml += `</div>`;
                 zoneDiv.innerHTML = gridHtml;
+
+                // 在 initUI() 內生成完 zoneDiv 後，為 .c-zone-title 綁定點擊事件
+                zoneDiv.querySelector('.c-zone-title').addEventListener('click', () => {
+                    handleZoneTitleClick(z);
+                });
+
                 mapMain.appendChild(zoneDiv);
             });
             
@@ -990,7 +1135,7 @@
             const quickPanel = document.getElementById('js-quickCropPanel'); // 快捷作物面板
             quickPanel.innerHTML = ''; 
 
-            const categories = ['至臻', '黃金', '紫色', '藍色', '綠色', '灰色'];
+            const categories = ['至臻', '橙色', '紫色', '藍色', '綠色', '灰色'];
             
             categories.forEach(cat => {
                 // 生成下拉選單群組
@@ -1089,8 +1234,8 @@
                     const tr = document.createElement('tr');
                     tr.innerHTML = `
                         <td class="t-${cat} c-clickable-crop c-text-indent-sm" data-short="${c.short}">${c.name}</td>
-                        <td><input type="text" class="c-inv-static-input" value="${formattedWeight}" readonly data-weight-val="${formattedWeight}"></td>
-                        <td><input type="text" class="c-inv-static-input" value="${displayPrice}" readonly></td>
+                        <td><input type="text" class="c-inv-static-input" value="${formattedWeight}" readonly tabindex="-1" data-weight-val="${formattedWeight}"></td>
+                        <td><input type="text" class="c-inv-static-input" value="${displayPrice}"    readonly tabindex="-1"></td>
 
                         <td><input type="number" class="c-inv-input js-inv-input" data-short="${c.short}" data-cat="${cat}" data-mode="普" min="0" max="99999" placeholder="-"></td>
                         <td><input type="number" class="c-inv-input js-inv-input" data-short="${c.short}" data-cat="${cat}" data-mode="異" min="0" max="99999" placeholder="-"></td>
@@ -1188,7 +1333,7 @@
 
         function calculateInvTotals() {
             // 1. 定義六種稀有度系列與三種型態的陣列
-            const categories = ['至臻', '黃金', '紫色', '藍色', '綠色', '灰色'];
+            const categories = ['至臻', '橙色', '紫色', '藍色', '綠色', '灰色'];
             const modes      = ['普'  , '異'  , '幻'];
             
             // 2. 初始化全場跨系列的加總物件
@@ -1453,10 +1598,18 @@
         function enterMoveMode() {
             moveModeState           = 'pick_src';
             moveModeBtn.className   = 'c-btn c-btn-move-src';
-            moveModeBtn.textContent = '🔄 請點選：起點格';
+            moveModeBtn.textContent = '🔄 請點選：起點格/田標題';
             if(moveSourceCell) moveSourceCell.classList.remove('c-move-pending-source');
             moveSourceCell          = null;
+
+            // 清除舊的整塊田高亮[cite: 4]
+            if(zoneMoveSource) {
+                document.querySelector(`.c-zone[data-zone-id="${zoneMoveSource}"] .c-zone-title`)?.classList.remove('c-zone-pending-source');
+                zoneMoveSource = null;
+            }
+            document.body.classList.add('is-move-mode'); // 啟用 CSS 懸停樣式
         }
+
         // 5. 退出「交換模式」狀態重置函式
         function exitMoveMode() {
             moveModeState           = 'off';
@@ -1464,6 +1617,13 @@
             moveModeBtn.textContent = '🔄 交換模式：關閉';
             if(moveSourceCell) moveSourceCell.classList.remove('c-move-pending-source');
             moveSourceCell          = null;
+
+            // 清除舊的整塊田高亮[cite: 4]
+            if(zoneMoveSource) {
+                document.querySelector(`.c-zone[data-zone-id="${zoneMoveSource}"] .c-zone-title`)?.classList.remove('c-zone-pending-source');
+                zoneMoveSource = null;
+            }
+            document.body.classList.remove('is-move-mode');
         }
 
         // 6. 進入「複製模式」狀態初始化函式
@@ -1538,12 +1698,108 @@
             }
         }
 
+        // 處理田地標題點擊 (整塊批次交換)
+        function handleZoneTitleClick(zoneId) {
+            if (moveModeState === 'off') return;
+
+            const currentTitle = document.querySelector(`.c-zone[data-zone-id="${zoneId}"] .c-zone-title`);
+
+            // 如果先前已經單選了某個格子，先取消單格選取
+            if (moveSourceCell) {
+                moveSourceCell.classList.remove('c-move-pending-source');
+                moveSourceCell = null;
+            }
+
+            // 階段一：指定起點田
+            if (!zoneMoveSource) {
+                zoneMoveSource = zoneId;
+                currentTitle.classList.add('c-zone-pending-source');
+                moveModeBtn.className   = 'c-btn c-btn-move-dst';
+                moveModeBtn.textContent = '🔄 請點選：終點格/田標題';
+                showStatus(`🔄 已選取第 ${zoneId} 塊田，請選擇對調標題`);
+            } 
+            
+            // 階段二：指定終點田並對調
+            else {
+                if (zoneMoveSource === zoneId) {
+                    currentTitle.classList.remove('c-zone-pending-source');
+                    enterMoveMode();
+                    return;
+                }
+
+                // 1. 先記錄起點田地編號
+                const tempSrcZone = zoneMoveSource;
+
+                // 2. 對調兩塊田的所有 8x8 格子
+                swapWholeZone(tempSrcZone, zoneId);
+
+                // 3. 清除高亮與狀態
+                document.querySelector(`.c-zone[data-zone-id="${tempSrcZone}"] .c-zone-title`)?.classList.remove('c-zone-pending-source');
+                zoneMoveSource = null;
+
+                // 4. 帶入正確的 tempSrcZone 顯示提示
+                showStatus(`🔄 第 ${tempSrcZone} 塊田與第 ${zoneId} 塊田全數作物交換成功！`);
+                calculateStats();
+                autoSaveData();
+                enterMoveMode();
+            }
+        }
+
+        // 執行兩塊田地的全數單元格資料交換
+        function swapWholeZone(srcZone, dstZone) {
+            const srcCells = document.querySelectorAll(`.c-cell[data-zone="${srcZone}"]`);
+            
+            // 判斷兩塊田地的奇偶性是否不同（例如：奇數田 ↔ 偶數田 交換）
+            const isSrcEven = (Number(srcZone) % 2 === 0);
+            const isDstEven = (Number(dstZone) % 2 === 0);
+            const isCrossParity = (isSrcEven !== isDstEven);
+
+            srcCells.forEach(srcCell => {
+                const row = srcCell.dataset.row;
+                const col = srcCell.dataset.col;
+                
+                // 若為「奇數田與偶數田互相交換」，目標格子的 Column 需進行反轉 (9 - col) 避開鏡像
+                const targetCol = isCrossParity ? (9 - Number(col)).toString() : col;
+
+                const dstCell = document.querySelector(`.c-cell[data-zone="${dstZone}"][data-row="${row}"][data-col="${targetCol}"]`);
+
+                if (dstCell) {
+                    const srcData = {
+                        crop: srcCell.dataset.crop, style: srcCell.dataset.style, lvl: srcCell.dataset.lvl,
+                        html: srcCell.innerHTML, className: srcCell.className.replace('c-move-pending-source', '').trim()
+                    };
+                    const dstData = {
+                        crop: dstCell.dataset.crop, style: dstCell.dataset.style, lvl: dstCell.dataset.lvl,
+                        html: dstCell.innerHTML, className: dstCell.className.replace('c-move-pending-source', '').trim()
+                    };
+
+                    writeCellData(srcCell, dstData);
+                    writeCellData(dstCell, srcData);
+                }
+            });
+        }
+
         // 土地 DOM 屬性寫入核心工具
         function writeCellData(targetCell, data) {
-            targetCell.className = data.className; targetCell.innerHTML = data.html;
-            if(data.crop)  targetCell.dataset.crop  = data.crop;  else delete targetCell.dataset.crop;
-            if(data.style) targetCell.dataset.style = data.style; else delete targetCell.dataset.style;
-            if(data.lvl)   targetCell.dataset.lvl   = data.lvl;   else delete targetCell.dataset.lvl;
+            // 取得當前的座標與區域資訊
+            const zone = targetCell.dataset.zone;
+            const row  = targetCell.dataset.row;
+            const col  = targetCell.dataset.col;
+
+            // 先完全清空該格子
+            resetCell(targetCell);
+
+            // 補回座標屬性
+            targetCell.dataset.zone = zone;
+            targetCell.dataset.row  = row;
+            targetCell.dataset.col  = col;
+
+            // 寫入新資料
+            targetCell.className = data.className; 
+            targetCell.innerHTML = data.html;
+            if(data.crop)  targetCell.dataset.crop  = data.crop;
+            if(data.style) targetCell.dataset.style = data.style;
+            if(data.lvl)   targetCell.dataset.lvl   = data.lvl;
         }
 
         // ============================================================
@@ -1574,8 +1830,9 @@
                 if(!statsMap[crop]) {
                     const info = findCropByShort(crop);
                     statsMap[crop] = { 
+                        // ★【修正點 2】：找不到時直接使用 crop (簡稱)，不使用「其他」
                         name: info?.name || crop, 
-                        cat:  info?.cat  || '其他', 
+                        cat:  info?.cat  || '錯誤', 
                         普: 0, 異: 0, 幻: 0, 巨: 0, 晶: 0, 流: 0, 星: 0,
                         fruitSum: 0 
                     };
@@ -1585,7 +1842,7 @@
                 statsMap[crop].fruitSum += lvl; 
             });
 
-            // 3. 更新右側面板最上方的數據儀表板 (可種 512 格、已用格數、剩餘格數、作物總數)
+            // 3. 更新右側面板最上方的數據儀表板
             document.getElementById('js-statPlantedGrids').textContent = totalPlantedGrids.toLocaleString() + " 格";
             document.getElementById('js-statRemainGrids' ).textContent = (512 - totalPlantedGrids).toLocaleString() + " 格";
             document.getElementById('js-statTotalSeeds'  ).textContent = totalSeedsCount.toLocaleString() + " 顆";
@@ -1607,21 +1864,33 @@
             `;
             statsBody.appendChild(summaryTr);
 
-            // 防錯機制：如果田間完全沒有種植任何作物，顯示「暫無耕作數據」並結束
+            // 4. 防錯機制：如果田間完全沒有種植任何作物，顯示「暫無耕作數據」並結束
             if(totalPlantedGrids === 0) {
                 statsBody.innerHTML += `<tr><td colspan="10" class="c-no-data-msg">暫無耕作數據</td></tr>`; 
                 return;
             }
 
-            // 5. 按稀有度分類（至臻 ➔ 黃金 ➔ ... ➔ 灰色）依序生成明細表格
-            const categoriesOrder = ['至臻', '黃金', '紫色', '藍色', '綠色', '灰色'];
+            // 5. 按稀有度分類（至臻 ➔ 橙色 ➔ ... ➔ 錯誤）依序生成明細表格
+            const categoriesOrder = ['至臻', '橙色', '紫色', '藍色', '綠色', '灰色', '錯誤'];
             categoriesOrder.forEach(currentCat => {
-                // 僅篩選出「目前地圖上確實有種植」的該系列作物
-                const catCrops = cropsData[currentCat].filter(c => statsMap[c.short]);
+                let catCrops = [];
+                if (currentCat === '錯誤') {
+                    // ★【修正點 2】：舊作物直接以簡稱進行顯示與歸歸類
+                    catCrops = Object.keys(statsMap)
+                        .filter(k => statsMap[k].cat === '錯誤')
+                        .map(k => ({ short: k, name: statsMap[k].name }));
+                } else {
+                    catCrops = cropsData[currentCat].filter(c => statsMap[c.short]);
+                }
+                
                 if (catCrops.length > 0) {
+                    const isErrorCat = (currentCat === '錯誤');
+
                     // 建立跨 10 欄的系列分類標題列
                     const catTitleTr = document.createElement('tr');
-                    catTitleTr.innerHTML = `<td colspan="10" class="c-cat-row">★ ${currentCat}系列</td>`;
+                    const titleClass = isErrorCat ? 'c-cat-row-error' : 'c-cat-row';
+                    const titleLabel = isErrorCat ? '⚠️ 舊版/未記錄作物' : `★ ${currentCat}系列`;
+                    catTitleTr.innerHTML = `<td colspan="10" class="${titleClass}">${titleLabel}</td>`;
                     statsBody.appendChild(catTitleTr);
 
                     // 初始化該稀有度系列的專屬小計歸納器
@@ -1635,16 +1904,17 @@
                         types.forEach(t => catSubTotals[t] += item[t]);
                         catSubTotals.fruitSum += item.fruitSum;
 
-                        const 
-                        itemTr           = document.createElement('tr');
+                        const itemTr     = document.createElement('tr');
                         itemTr.id        = `js-stat-row-${c.short}`; 
                         itemTr.className = 'c-stat-item-row';
                         
-                        // 動態生成 7 個型態欄位並帶上 data-type
                         const itemCellsHtml = types.map(t => `<td data-type="${t}">${formatNum(item[t], '-')}</td>`).join('');
 
+                        // 若為錯誤/舊作物，顯示名稱時掛上紅字標籤
+                        const nameClass = isErrorCat ? 't-錯誤' : `t-${currentCat}`;
+
                         itemTr.innerHTML = `   
-                            <td class="t-${currentCat} c-stat-text-left" style="font-weight:bold;">${item.name}</td>
+                            <td class="${nameClass} c-stat-text-left" style="font-weight:bold;">${item.name}</td>
                             ${itemCellsHtml}
                             <td class="c-stat-bg-sub">${itemSum.toLocaleString()}</td>
                             <td class="c-stat-bg-item-fruit">${item.fruitSum.toLocaleString()}</td>
@@ -1693,15 +1963,65 @@
             }
         }
 
-        // 全場大掃除清空
-        document.getElementById('js-clearAllBtn').addEventListener('click', () => {
-            if (confirm('確定要清空全場作物嗎？')) {
-                exitMoveMode(); exitCopyMode(); clearMapCropHighlight();
-                document.querySelectorAll('.c-cell').forEach(cell => {
-                    resetCell(cell);
-                });
-                calculateStats(); autoSaveData(); showStatus('🧹 已清空全場作物！');
+        // 清除功能 Modal 邏輯
+        const clearModal = document.getElementById('js-clearModal');
+        const clearAllBtn = document.getElementById('js-clearAllBtn');
+        const clearModalCancel = document.getElementById('js-clearModalCancel');
+        const clearModalConfirm = document.getElementById('js-clearModalConfirm');
+
+        // 開啟 Modal 快選單
+        clearAllBtn.addEventListener('click', () => {
+            clearModal.classList.add('c-modal-open');
+        });
+
+        // 關閉 Modal 快選單
+        function closeClearModal() {
+            clearModal.classList.remove('c-modal-open');
+        }
+
+        clearModalCancel.addEventListener('click', closeClearModal);
+
+        // 點擊背景空白處也可關閉 Modal
+        clearModal.addEventListener('click', (e) => {
+            if (e.target === clearModal) closeClearModal();
+        });
+
+        // 清除地圖作物的獨立輔助函式
+        function clearMapCrops() {
+            exitMoveMode(); 
+            exitCopyMode(); 
+            clearMapCropHighlight();
+            document.querySelectorAll('.c-cell').forEach(cell => {
+                resetCell(cell);
+            });
+            calculateStats();
+        }
+
+        // 清除背包庫存的獨立輔助函式
+        function clearBagInventory() {
+            document.querySelectorAll('.c-inv-input').forEach(input => {
+                input.value = '';
+            });
+            calculateInvTotals();
+        }
+
+        // 點擊「確定」執行對應清除動作
+        clearModalConfirm.addEventListener('click', () => {
+            const selectedOption = document.querySelector('input[name="clearOption"]:checked')?.value;
+
+            if (selectedOption === 'bag') {
+                clearBagInventory();
+                showStatus('🧹 已清空背包庫存！');
+            } else if (selectedOption === 'map') {
+                clearMapCrops();
+                showStatus('🧹 已清空田間作物！');
+            } else if (selectedOption === 'all') {
+                clearBagInventory();
+                clearMapCrops();
+                showStatus('🧹 已清空背包與田間作物！');
             }
+            autoSaveData();
+            closeClearModal();
         });
 
         function showStatus(msg) {
@@ -1746,29 +2066,40 @@
                         const cell = document.querySelector(`.c-cell[data-zone="${item.z}"][data-row="${item.r}"][data-col="${item.c}"]`);
                         if(cell) {
                             const cropInfo = findCropByShort(currentShort);
+
                             if(cropInfo) {
-                                // 1. 背景處理
-                                if(item.style === '流') {
+                                // ---- 已知作物的正常渲染邏輯 ----
+                                const cropCat = cropInfo.cat;
+                                if (item.style === '流') {
                                     cell.classList.add('bg-style-流');
-                                } else if(item.style === '星') {
+                                } else if (item.style === '星') {
                                     cell.classList.add('bg-style-星');
                                 } else {
-                                    if (cropInfo.cat === '至臻') cell.classList.add(`bg-crop-${currentShort}`);
-                                    else cell.classList.add(`bg-cat-${cropInfo.cat}`);
+                                    if (cropCat === '至臻') {
+                                        cell.classList.add(`bg-crop-${currentShort}`);
+                                    } else {
+                                        cell.classList.add(`bg-cat-${cropCat}`);
+                                    }
                                 }
 
-                                // 2. 【關鍵修正】一律加上基礎分類 Class（保持上排文字顏色）
                                 cell.classList.add(`t-${cropInfo.cat}`);
 
-                                // 3. 獨立加上型態 Class（改變下排文字顏色）
                                 if(item.style === '巨') cell.classList.add('t-style-巨');
                                 else if(item.style === '異') cell.classList.add('t-style-異');
                                 else if(item.style === '幻') cell.classList.add('t-style-幻');
                                 else if(item.style === '晶') cell.classList.add('t-style-晶');
                                 else if(item.style === '流') cell.classList.add('t-style-流');
                                 else if(item.style === '星') cell.classList.add('t-style-星');
+                            } else {
+                                // ★【修正點 1】：找不到名稱的舊作物
+                                // 不套用 .bg-cat-錯誤 (粉底)，預設保持白底，並掛上 .t-錯誤 (紅字)
+                                cell.classList.add('t-錯誤');
                             }
-                            cell.dataset.crop = currentShort; cell.dataset.style = item.style || '普'; cell.dataset.lvl = item.lvl || 1;
+
+                            cell.dataset.crop = currentShort; 
+                            cell.dataset.style = item.style || '普'; 
+                            cell.dataset.lvl = item.lvl || 1;
+                            
                             let styleLabel = item.style === '普' ? '' : (item.style + ' ');
                             cell.innerHTML = `<span class="c-crop-text">${currentShort}</span><span class="c-level-text">${styleLabel}${item.lvl || 1}</span>`;
                         }
